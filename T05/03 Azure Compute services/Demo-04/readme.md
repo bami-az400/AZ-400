@@ -1,40 +1,14 @@
-# Demo Instructions
-
-Install function tools:
+# Azure Kubernetes Services (AKS)
 
 ```
-npm install -g azure-functions-core-tools
+az group create --name az-400 --location westeurope
+az aks create --resource-group az-400 --name voteCluster --node-count 1 --enable-addons monitoring --generate-ssh-keys
+az aks install-cli
+az aks get-credentials --resource-group az-400 --name voteCluster
 ```
 
-Scaffold Project:
+kubectl get nodes
 
-```
-func init DemoFunctions
-cd DemoFunctions
-```
+kubectl apply -f azure-vote.yaml
 
-Create a new Function:
-
-```
-func new --name MyHttpTrigger --template "HttpTrigger"
-```
-
-> Note: If you leave out the template you will be prompted for it
-
-Run function locally:
-
-```
-func host start --build
-```
-
-Create Ressources in Azure:
-
-```
-az group create --name rf-functionapp-ap --location westeurope
-
-az storage account create --name demofuntionsap --location westeurope --resource-group rf-functionapp-ap --sku Standard_LRS
-
-az functionapp create --resource-group rf-functionapp-ap --consumption-plan-location westeurope --name demofuncitonsap --storage-account demofuntionsap --runtime dotnet
-
-func azure functionapp publish DemoFunctions
-```
+kubectl get service azure-vote-front --watch
